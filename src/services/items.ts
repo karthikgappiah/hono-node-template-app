@@ -1,50 +1,57 @@
-import type { z } from "zod";
+import { eq } from "drizzle-orm";
 
-import type { ItemSchema } from "#src/routes/items.js";
+import { db } from "#src/database/index.js";
+import { items_table } from "#src/database/schemas/items.js";
 
-type Item = z.infer<typeof ItemSchema>;
-
-const items: Item[] = [];
-let nextId = 1;
+type Item = typeof items_table.$inferSelect;
+type NewItem = typeof items_table.$inferInsert;
 
 export const items_service = {
-  create: (data: Omit<Item, "id">): Item => {
-    const item: Item = { id: String(nextId), ...data };
-    nextId += 1;
-    items.push(item);
-    return item;
+  create: async (data: Omit<NewItem, "id">): Promise<Item> => {
+    const rows = await db.insert(items_table).values(data).returning();
+    return rows[0];
   },
 
-  delete: (id: string): boolean => {
-    const idx = items.findIndex((item) => item.id === id);
-    if (idx === -1) {
-      return false;
-    }
-    items.splice(idx, 1);
-    return true;
+  delete: async (id: number): Promise<boolean> => {
+    const rows = await db
+      .delete(items_table)
+      .where(eq(items_table.id, id))
+      .returning();
+    return rows.length > 0;
   },
 
-  findAll: (): Item[] => items,
+  findAll: (): Promise<Item[]> => db.select().from(items_table),
 
-  findById: (id: string): Item | undefined =>
-    items.find((item) => item.id === id),
-
-  replace: (id: string, data: Omit<Item, "id">): Item | undefined => {
-    const idx = items.findIndex((item) => item.id === id);
-    if (idx === -1) {
-      return undefined;
-    }
-    const item: Item = { id, ...data };
-    items[idx] = item;
-    return item;
+  findById: async (id: number): Promise<Item | undefined> => {
+    const rows = await db
+      .select()
+      .from(items_table)
+      .where(eq(items_table.id, id))
+      .limit(1);
+    return rows[0];
   },
 
-  update: (id: string, data: Partial<Omit<Item, "id">>): Item | undefined => {
-    const idx = items.findIndex((item) => item.id === id);
-    if (idx === -1) {
-      return undefined;
-    }
-    items[idx] = { ...items[idx], ...data } as Item;
-    return items[idx];
+  replace: async (
+    id: number,
+    data: Omit<NewItem, "id">
+  ): Promise<Item | undefined> => {
+    const rows = await db
+      .update(items_table)
+      .set(data)
+      .where(eq(items_table.id, id))
+      .returning();
+    return rows[0];
+  },
+
+  update: async (
+    id: number,
+    data: Partial<Omit<NewItem, "id">>
+  ): Promise<Item | undefined> => {
+    const rows = await db
+      .update(items_table)
+      .set(data)
+      .where(eq(items_table.id, id))
+      .returning();
+    return rows[0];
   },
 };

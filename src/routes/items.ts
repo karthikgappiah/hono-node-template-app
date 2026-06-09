@@ -3,7 +3,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 export const ItemSchema = z
   .object({
     description: z.string().openapi({ example: "A useful widget" }),
-    id: z.string().openapi({ example: "1" }),
+    id: z.number().openapi({ example: 1 }),
     name: z.string().openapi({ example: "Widget" }),
   })
   .openapi("Item");
@@ -13,7 +13,9 @@ export const ItemBodySchema = ItemSchema.omit({ id: true }).openapi("ItemBody");
 export const ItemPatchSchema = ItemBodySchema.partial().openapi("ItemPatch");
 
 export const IdParamSchema = z.object({
-  id: z.string().openapi({ example: "1", param: { in: "path", name: "id" } }),
+  id: z.coerce
+    .number()
+    .openapi({ example: 1, param: { in: "path", name: "id" } }),
 });
 
 export const NotFoundSchema = z
