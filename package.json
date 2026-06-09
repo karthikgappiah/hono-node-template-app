@@ -1,4 +1,14 @@
 {
+  "name": "hono-node-template-app",
+  "type": "module",
+  "scripts": {
+    "dev": "dotenvx run -- tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "dotenvx run -- node dist/index.js",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "prepare": "lefthook install"
+  },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.71.2",
     "@hono/node-server": "^1.19.14",
@@ -12,15 +22,5 @@
     "tsx": "^4.7.1",
     "typescript": "^5.8.3",
     "ultracite": "7.8.2"
-  },
-  "name": "hono-node-template-app",
-  "scripts": {
-    "dev": "dotenvx run -- tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "dotenvx run -- node dist/index.js",
-    "check": "ultracite check",
-    "fix": "ultracite fix",
-    "prepare": "lefthook install"
-  },
-  "type": "module"
+  }
 }
