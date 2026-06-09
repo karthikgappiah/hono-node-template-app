@@ -6,6 +6,7 @@
     "dev": "dotenvx run -- tsx watch src/index.ts",
     "build": "tsc",
     "start": "dotenvx run -- node dist/index.js",
+    "test": "dotenvx run -- vitest run",
     "check": "ultracite check",
     "fix": "ultracite fix",
     "prepare": "lefthook install",
@@ -32,6 +33,7 @@
     "oxlint": "^1.69.0",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3",
-    "ultracite": "7.8.2"
+    "ultracite": "7.8.2",
+    "vitest": "^4.1.8"
   }
 }
