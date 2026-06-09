@@ -1,5 +1,6 @@
 {
   "name": "hono-node-template-app",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "dotenvx run -- tsx watch src/index.ts",
