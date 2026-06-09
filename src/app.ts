@@ -1,4 +1,5 @@
 import { OpenAPIHono as Hono } from "@hono/zod-openapi";
+import { Scalar } from "@scalar/hono-api-reference";
 
 import manifest from "#/package.json" with { type: "json" };
 import { index_route } from "#src/routes/index.js";
@@ -17,5 +18,7 @@ app.doc("/spec", {
   },
   openapi: "3.0.0",
 });
+
+app.get("/ui", Scalar({ url: "/spec" }));
 
 export default app;
