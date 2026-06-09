@@ -2,6 +2,7 @@ import { OpenAPIHono as Hono } from "@hono/zod-openapi";
 import { Scalar } from "@scalar/hono-api-reference";
 
 import manifest from "#/package.json" with { type: "json" };
+import { items_controller } from "#src/controllers/items.js";
 import { index_route } from "#src/routes/index.js";
 
 const app = new Hono({
@@ -10,6 +11,8 @@ const app = new Hono({
 }).basePath("/api");
 
 app.openapi(index_route, (c) => c.json({ message: "Hello, world!" }));
+
+app.route("/", items_controller);
 
 app.doc("/spec", {
   info: {
