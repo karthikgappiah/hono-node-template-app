@@ -23,6 +23,7 @@ COPY --from=builder --chown=hono:nodejs /app/package.json /app/package.json
 COPY --from=builder --chown=hono:nodejs /app/.env /app/.env
 
 USER hono
+# Must match PORT in .env and internal_port in fly.toml.
 EXPOSE 3000
 
 CMD ["./node_modules/.bin/dotenvx", "run", "--", "node", "/app/dist/index.js"]
