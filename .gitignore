@@ -12,8 +12,9 @@
 node_modules/
 
 # env
-.env
-.env.production
+# .env files are encrypted by dotenvx and safe to commit.
+# Never commit .env.keys — it holds the private decryption keys.
+.env.keys
 
 # logs
 logs/

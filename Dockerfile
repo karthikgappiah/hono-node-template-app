@@ -5,7 +5,7 @@ FROM base AS builder
 WORKDIR /app
 
 COPY package.json bun.lock ./
-COPY tsconfig.json src ./
+COPY tsconfig.json .env src ./
 
 RUN bun install --frozen-lockfile && \
     bun run build && \
@@ -20,8 +20,9 @@ RUN adduser --system --uid 1001 hono
 COPY --from=builder --chown=hono:nodejs /app/node_modules /app/node_modules
 COPY --from=builder --chown=hono:nodejs /app/dist /app/dist
 COPY --from=builder --chown=hono:nodejs /app/package.json /app/package.json
+COPY --from=builder --chown=hono:nodejs /app/.env /app/.env
 
 USER hono
 EXPOSE 3000
 
-CMD ["node", "/app/dist/index.js"]
+CMD ["./node_modules/.bin/dotenvx", "run", "--", "node", "/app/dist/index.js"]
