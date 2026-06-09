@@ -7,7 +7,7 @@ import { index_route } from "#src/routes/index.js";
 const app = new Hono({
   // INFO: strict disabled to not differentiate between /route and /route/
   strict: false,
-});
+}).basePath("/api");
 
 app.openapi(index_route, (c) => c.json({ message: "Hello, world!" }));
 
@@ -19,6 +19,6 @@ app.doc("/spec", {
   openapi: "3.0.0",
 });
 
-app.get("/ui", Scalar({ url: "/spec" }));
+app.get("/ui", Scalar({ url: "/api/spec" }));
 
 export default app;
